@@ -64,7 +64,7 @@
                     <article>{{ message[1].content }}</article>
                 </section>
                 <div id="form">
-                    <input placeholder="名無しの食材" v-model="authorName"><br>
+                    <input placeholder="Anonymous" v-model="authorName"><br>
                     <textarea rows=3 cols=40 v-model="content"></textarea><br>
                     <input type="submit" id="submit" v-on:click="submit" value="送信">
                 </div>
@@ -72,6 +72,7 @@
         </div>
         <script>
             const host = window.location.protocol + "//" + window.location.host;
+            const token = localStorage.getItem("token");
             let app = new Vue({
                 el: '#app',
                 data: {
@@ -89,7 +90,9 @@
                         fetch(host + "/comments",
                             { method: 'POST',
                             body: JSON.stringify(data),
-                            headers: {"Access-Control-Allow-Origin": "*"}})
+                            headers:
+                                {"Access-Control-Allow-Origin": "*",
+                                "Authorization": token}})
                         .then(response => response.json())
                         .then(data => console.log(data));
                     }
@@ -101,18 +104,25 @@
             }
             function reload(wait, since){
                 const query = since === null ? "" : "&since=" + since;
-                fetch(host + "/comments/?wait=" + wait + query)
-                    .then(response => response.json())
-                    .then(data => {
-                        for (let msg of data){
-                            msg[1].date = moment(msg[1].date).tz(moment.tz.guess()).format("YYYY-MM-DD HH:mm:ss");
+                fetch(host + "/comments/?wait=" + wait + query
+                    , { headers: {"Authorization": token}})
+                    .then(response => {
+                        if (response.status == 403){
+                            window.location.href = "/login";
+                        } else {
+                            response.json().then(data => {
+                                for (let msg of data){
+                                    msg[1].date = moment(msg[1].date).tz(moment.tz.guess()).format("YYYY-MM-DD HH:mm:ss");
+                                }
+                                app.messages = data;
+                                let next = since;
+                                if (data.length >= 1) {
+                                    next = data[data.length - 1];
+                                }
+                                reload(1, next);
+                            });
                         }
-                        app.messages = data;
-                        let next = since;
-                        if (data.length >= 1) {
-                            next = data[data.length - 1];
-                        }
-                        reload(1, next); });
+                    });
             }
             reload(0, null);
         </script>

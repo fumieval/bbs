@@ -13,9 +13,10 @@ passthroughBareB [d|
         { port :: Int
         , sqlite :: Text
         , salt :: Text
+        , password :: Secret Text
         }
     |]
 
 getConfig :: IO Config
 getConfig = run $ envs <> opts <> fullDefaults
-    Config { port = 8812, sqlite = "dev.sqlite3", salt = "" }
+    Config { port = 8812, sqlite = "dev.sqlite3", salt = "", password = Secret "1509" }

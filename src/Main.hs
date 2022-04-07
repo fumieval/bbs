@@ -15,12 +15,15 @@ import Data.Aeson (FromJSON, ToJSON)
 import Data.Time (getCurrentTime)
 import Database.Persist qualified as DB
 import Database.Persist.Sqlite qualified as DB
+import Network.HTTP.Types
 import Web.Scotty
 
+import Auth
 import Config
 import Model
 import Types
 import Util
+import Panfiguration (Secret(..))
 
 data CommentReq = CommentReq
     { name :: Text
@@ -50,13 +53,16 @@ routes Env{..} = do
     get "/" $ file "index.html"
     options "/comments" $ text ""
     get "/comments" $ do
+        requireAuth
+
         wait <- optional $ param "wait"
         when (wait == Just (1 :: Int)) $ liftIO $ waitForChange Env{..}
-
         since <- optional $ param "since"
         comments <- runDB conn $ selectComments since
         json comments 
     post "/comments" $ do
+        requireAuth
+
         CommentReq{..} <- jsonData
         now <- liftIO getCurrentTime
         _ <- runDB conn $ DB.insert Comment
@@ -67,10 +73,19 @@ routes Env{..} = do
         liftIO $ notifyChange Env{..}
         json ()
 
+requireAuth :: ActionM ()
+requireAuth = do
+    token <- header "Authorization"
+    when (token == Nothing) $ do
+        raiseStatus status403 "unauthorised"
+
 main :: IO ()
 main = do
     config@Config{..} <- getConfig
+    auth <- volatileTokenAuthorisation $ unSecret config.password
     runStdoutLoggingT $ DB.withSqliteConn sqlite $ \conn -> do
         runDB conn $ DB.runMigration migrateAll
         vCounter <- liftIO $ newTVarIO (0 :: Int)
-        liftIO $ scotty port $ routes Env{..}
+        liftIO $ scotty port $ do
+            middleware auth
+            routes Env{..}

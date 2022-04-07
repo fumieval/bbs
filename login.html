@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>login</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <div id="messages">
+
+    </div>
+    <input type="password" id="password">
+    <input type="submit" id="submit">
+    <script>
+      let messages = document.getElementById("messages");
+      let password = document.getElementById("password");
+      document.getElementById("submit").addEventListener("click"
+        , event => fetch("/login", { method: "POST", body: password.value })
+          .then(resp => resp.text().then(txt => {
+            if (resp.status == 200) {
+              localStorage.setItem('token', txt);
+              window.location.href = "/";
+            } else {
+              let e = document.createElement("div");
+              e.innerText = "Incorrect password";
+              messages.appendChild(e);
+            }
+          })));
+    </script>
+  </body>
+</html>
