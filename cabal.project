@@ -1,20 +1,17 @@
 packages:
     .
-    ../hs/panfiguration
 
 source-repository-package
     type: git
-    location: https://github.com/fumieval/persistent
-    tag: 7d04c601dc8c5eecfc6ab700cc3af5129bc28775 
-    subdir: persistent
+    location: https://github.com/herp-inc/panfiguration
+    tag: f06fd77a495c204fb5250e724c768f385887efb9
 
--- source-repository-package
---    type: git
---    location: https://github.com/herp-inc/panfiguration
---    tag: master
+source-repository-package
+    type: git
+    location: https://github.com/fumieval/http-types
+    tag: 4e7b0530d0ac6fd32a8faac31362971e0dc32559
 
-extra-include-dirs:
-    /opt/homebrew/opt/zlib/include
-
-extra-lib-dirs:
-    /opt/homebrew/opt/zlib/lib
+source-repository-package
+    type: git
+    location: https://github.com/fumieval/OrderOrder
+    tag: f4bd7b9c059cf8a3430ce349563b48d52072e5d3

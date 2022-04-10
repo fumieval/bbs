@@ -1,0 +1,46 @@
+body {
+  background-color: black;
+  color: white;
+}
+section {
+  border: 1px solid white;
+  margin: 1em;
+  padding: 1em;
+}
+#container {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+#form {
+  margin: 1em;
+  padding: 1em;
+}
+article {
+  white-space: pre-wrap;
+}
+.anchor {
+  font-weight: bold;
+  color: white;
+}
+nav {
+  position: fixed;
+  right: 1em;
+  top: 1em;
+  text-align: center;
+}
+.btn {
+  height: 2em;
+  width: 2em;
+  border: 1px solid white;
+  display: block;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding-top: 4px;
+  font-size: 1.5em;
+}
+.login input 
+{
+  font-size: 1.5em;
+}

@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>BBS</title>
+        <script src="https://momentjs.com/downloads/moment.min.js"></script>
+        <script src="https://momentjs.com/downloads/moment-timezone-with-data-10-year-range.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue-moment@4.1.0/dist/vue-moment.min.js"></script>
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <div id="container">
+            <nav>
+                <a class="btn" href="#container">↑</a>
+                <a class="btn" href="#form">↓</a>
+            </nav>
+            <main id="app">
+                <section v-for="message in messages">
+                    <div><a class="anchor" :id='"c-" + message[0]' :href='"/#c-" + message[0]'>#{{ message[0] }}</a>&nbsp;
+                        {{ message[1].date | moment("YYYY-MM-DD HH:mm:ss") }} - {{ message[1].name }}</div>
+                    <article>{{ message[1].content }}</article>
+                </section>
+                <div id="form">
+                    <input placeholder="Anonymous" v-model="authorName"><br>
+                    <textarea rows=3 cols=40 v-model="content"></textarea><br>
+                    <input type="submit" id="submit" v-on:click="submit" value="送信">
+                </div>
+            </main>
+        </div>
+        <script src="/main.js">
+            start();
+        </script>
+    </body>
+</html>

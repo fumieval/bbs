@@ -2,13 +2,16 @@
   <head>
     <title>login</title>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="/style.css">
   </head>
   <body>
     <div id="messages">
 
     </div>
-    <input type="password" id="password">
-    <input type="submit" id="submit">
+    <div id="container" class="login">
+      <input type="password" id="password" placeholder="password">
+      <input type="submit" id="submit">
+    </div>
     <script>
       let messages = document.getElementById("messages");
       let password = document.getElementById("password");

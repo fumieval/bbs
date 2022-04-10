@@ -19,31 +19,47 @@ extra-source-files:  CHANGELOG.md
 executable bbs
   main-is: Main.hs
   other-modules:
+    API.Comment
+    Env
     Config
-    Auth
-    Model
-    Util
-    Types
+    Domain.Comment
+    Domain.Tripcode
+    Lib.Authentication
+    Lib.Bearer
+    Lib.Comet
+    Lib.DB
+    Lib.Prelude
+    Lib.Scotty
+    Lib.Types
   -- other-extensions:
   build-depends:       base ^>=4.16,
-    text,
     aeson,
-    scotty,
+    barbies-th,
+    base64-bytestring,
+    bytestring,
+    containers,
+    cryptohash-sha256,
+    cryptonite,
+    http-types,
+    monad-logger,
+    mtl,
+    panfiguration,
     persistent,
     persistent-sqlite,
+    scotty,
+    stm,
+    template-haskell,
+    text,
     time,
     transformers,
-    monad-logger,
-    stm,
-    base64-bytestring,
-    cryptohash-sha256,
-    panfiguration,
-    barbies-th,
-    http-types,
-    containers,
+    unliftio,
     wai,
-    cryptonite,
-    bytestring,
+    wai-extra,
+    OrderOrder,
   hs-source-dirs: src
   default-language: GHC2021
+  default-extensions:
+    DeriveAnyClass
+    DerivingStrategies
   ghc-options: -Wall -Wcompat
+  ghc-options: -fplugin=OrderOrder
