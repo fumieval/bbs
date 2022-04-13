@@ -27,8 +27,6 @@ executable bbs
     Domain.Ident
     Domain.Thread
     Domain.Tripcode
-    Lib.Authentication
-    Lib.Bearer
     Lib.DB
     Lib.Prelude
     Lib.Scotty
@@ -57,7 +55,9 @@ executable bbs
     unliftio,
     wai,
     wai-extra,
+    wai-middleware-auth,
     wai-middleware-comet,
+    unordered-containers,
     OrderOrder,
   hs-source-dirs: src
   default-language: GHC2021

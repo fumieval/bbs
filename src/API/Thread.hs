@@ -22,7 +22,7 @@ data PostThreadReq = PostThreadReq
 
 route :: Env -> ScottyM ()
 route Env{..} = rest "/threads" REST
-  { scope = requireAuth
+  { scope = pure ()
   , query = do
     threads <- DB.run conn $ DB.selectList [] []
     json (map DB.entityVal threads :: [Thread])

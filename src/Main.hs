@@ -7,13 +7,15 @@ import API.Thread qualified
 import Config
 import Control.Monad.Logger
 import Env
-import Lib.Authentication qualified
 import Lib.DB qualified as DB
 import Lib.Prelude
-import Lib.Scotty (bearer)
 import Domain.Comment qualified
 import Domain.Thread qualified
+import Data.HashMap.Strict qualified as HM
 import Network.Wai.Middleware.RequestLogger
+import Network.Wai.Middleware.Auth
+import Network.Wai.Middleware.Auth.Provider
+import Network.Wai.Middleware.Auth.OAuth2.Google
 import Wai.Middleware.Comet qualified
 import Web.Scotty
 
@@ -31,8 +33,15 @@ routes env = do
 main :: IO ()
 main = do
   config@Config{..} <- getConfig
-  (initBearer, requireAuth) <- bearer $ Lib.Authentication.check config.password
   comet <- Wai.Middleware.Comet.create
+  let google = mkGoogleProvider
+        googleOauthClientId
+        googleOauthClientSecret
+        [googleOauthWhitelist]
+        Nothing
+  auth <- mkAuthMiddleware
+    $ setAuthProviders (HM.singleton "google" $ Provider google)
+    $ defaultAuthSettings
   runStdoutLoggingT
     $ DB.with config.database
     $ \conn -> do
@@ -40,7 +49,7 @@ main = do
         Domain.Comment.migrateAll
         Domain.Thread.migrateAll
       liftIO $ scotty port $ do
-        initBearer
         middleware logStdoutDev
+        middleware auth
         middleware comet
         routes Env{..}

@@ -22,8 +22,7 @@ source-repository-package
     location: https://github.com/fumieval/OrderOrder
     tag: f4bd7b9c059cf8a3430ce349563b48d52072e5d3
 
-extra-include-dirs:
-    /opt/homebrew/opt/zlib/include
-
-extra-lib-dirs:
-    /opt/homebrew/opt/zlib/lib
+source-repository-package
+    type: git
+    location: https://github.com/fumieval/wai-middleware-auth.git
+    tag: 34860665346575da4a228d4f2b61d67eb32fbc12

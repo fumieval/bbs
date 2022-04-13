@@ -13,10 +13,19 @@ passthroughBareB [d|
     { port :: Int
     , database :: Text
     , salt :: Text
-    , password :: Secret ByteString
+    , googleOauthClientId :: Text
+    , googleOauthClientSecret :: Text
+    , googleOauthWhitelist :: ByteString
     }
   |]
 
 getConfig :: IO Config
-getConfig = run $ envs <> opts <> fullDefaults
-  Config { port = 8812, database = "dev.sqlite3", salt = "", password = Secret "" }
+getConfig = run $ envs <> opts <> defaults
+  Config
+  { port = Just 8812
+  , database = Just "dev.sqlite3"
+  , salt = Just ""
+  , googleOauthClientId = Nothing
+  , googleOauthClientSecret = Nothing
+  , googleOauthWhitelist = Nothing
+  }

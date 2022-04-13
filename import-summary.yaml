@@ -10,9 +10,9 @@ Domain:
 - Lib
 Env:
 - Config
-- Lib
-Lib:
-- Lib
+- Lib.DB
+Lib.DB:
+- Lib.Types
 Main:
 - API
 - Config

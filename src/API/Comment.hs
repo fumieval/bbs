@@ -32,7 +32,7 @@ data PostCommentReq = PostCommentReq
 
 route :: Env -> ScottyM ()
 route Env{..} = rest "/threads/:thread/comments" REST
-  { scope = requireAuth
+  { scope = pure ()
   , query = do
     tid <- param "thread"
     QueryCommentReq{..} <- jsonData
