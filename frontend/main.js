@@ -55,7 +55,10 @@ let app = new Vue({
           }
         })
         .then(response => response.json())
-        .then(data => console.log(data));
+        .then(data => {
+          this.content = "";
+          console.log(data);
+        });
     },
   }
 });
