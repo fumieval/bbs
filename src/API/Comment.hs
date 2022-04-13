@@ -5,20 +5,22 @@
 module API.Comment where
 
 import Config
+import Control.Monad (join)
 import Data.Time (getCurrentTime)
 import Database.Persist qualified as DB
 import Domain.Comment
+import Domain.Thread
 import Domain.Tripcode
 import Env
 import Lib.Prelude
 import Lib.DB qualified as DB 
 import Lib.Scotty
 import Lib.Types
+import Network.HTTP.Types
 import Web.Scotty
 
 data QueryCommentReq = QueryCommentReq
-  { wait :: Bool
-  , since :: Maybe UTCTime
+  { since :: Maybe UTCTime
   } deriving Generic
   deriving anyclass (FromJSON, ToJSON)
 
@@ -28,23 +30,34 @@ data PostCommentReq = PostCommentReq
   } deriving Generic
   deriving anyclass (FromJSON, ToJSON)
 
-rest :: Env -> REST
-rest Env{..} = REST
+route :: Env -> ScottyM ()
+route Env{..} = rest "/threads/:thread/comments" REST
   { scope = requireAuth
   , query = do
+    tid <- param "thread"
     QueryCommentReq{..} <- jsonData
-    when wait $ liftIO comet.wait
 
-    comments <- DB.run conn $ selectComments since
-    json comments
+    join $ DB.run conn $ DB.getBy (UniqueIdent tid) >>= \case
+      Just thread -> do
+        let flt = (CommentThread DB.==. DB.entityKey thread)
+              : [CommentDate DB.>. t | t <- maybe [] pure since]
+        comments <- DB.selectList flt []
+        pure $ json $ map (\(DB.Entity _ val) -> val) comments
+      Nothing -> pure $ raiseStatus status404 "thread not found"
   , post = do
+    tid <- param "thread"
     PostCommentReq{..} <- jsonData
     now <- liftIO getCurrentTime
-    _ <- DB.run conn $ DB.insert Comment
-        { name = tripcode config.salt name
-        , date = now
-        , content = content
-        }
-    liftIO comet.notify
-    json ()
+    join $ DB.run conn $ DB.getBy (UniqueIdent tid) >>= \case
+      Just thread -> do
+        count <- DB.count [ CommentThread DB.==. DB.entityKey thread ]
+        _ <- DB.insert Comment
+          { thread = DB.entityKey thread
+          , seqNo = count + 1
+          , name = tripcode config.salt name
+          , date = now
+          , content = content
+          }
+        pure $ json ()
+      Nothing -> pure $ raiseStatus status404 "thread not found"
   }

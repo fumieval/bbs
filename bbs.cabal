@@ -20,13 +20,15 @@ executable bbs
   main-is: Main.hs
   other-modules:
     API.Comment
+    API.Thread
     Env
     Config
     Domain.Comment
+    Domain.Ident
+    Domain.Thread
     Domain.Tripcode
     Lib.Authentication
     Lib.Bearer
-    Lib.Comet
     Lib.DB
     Lib.Prelude
     Lib.Scotty
@@ -55,11 +57,14 @@ executable bbs
     unliftio,
     wai,
     wai-extra,
+    wai-middleware-comet,
     OrderOrder,
   hs-source-dirs: src
   default-language: GHC2021
   default-extensions:
     DeriveAnyClass
     DerivingStrategies
+    LambdaCase
+    OverloadedStrings
   ghc-options: -Wall -Wcompat
   ghc-options: -fplugin=OrderOrder

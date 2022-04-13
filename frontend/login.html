@@ -13,6 +13,7 @@
       <input type="submit" id="submit">
     </div>
     <script>
+      let return_to = new URLSearchParams(document.location.search).get("return_to");
       let messages = document.getElementById("messages");
       let password = document.getElementById("password");
       document.getElementById("submit").addEventListener("click"
@@ -20,7 +21,7 @@
           .then(resp => resp.text().then(txt => {
             if (resp.status == 200) {
               localStorage.setItem('token', txt);
-              window.location.href = "/";
+              window.location.href = return_to;
             } else {
               let e = document.createElement("div");
               e.innerText = "Incorrect password";

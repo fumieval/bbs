@@ -6,6 +6,7 @@ API:
 Config:
 - Lib.Types
 Domain:
+- Domain
 - Lib
 Env:
 - Config
@@ -13,7 +14,8 @@ Env:
 Lib:
 - Lib
 Main:
-- API.Comment
+- API
 - Config
+- Domain
 - Env
 - Lib

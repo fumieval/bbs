@@ -1,24 +1,28 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE NoFieldSelectors #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE DeriveAnyClass #-}
-module Domain.Comment where
+module Domain.Thread where
 
-import Database.Persist
-import Domain.Thread (ThreadId)
 import Lib.DB
 import Lib.Types
 
+import Database.Persist.Sqlite
+import Domain.Ident
+import Lib.Scotty ()
+
 declare [persistLowerCase|
-Comment
-    thread ThreadId
-    seqNo Int
+Thread
+    ident (Ident Thread)
     name Text
-    date UTCTime
-    content Text
+    createdAt UTCTime
+    updatedAt UTCTime
+    UniqueIdent ident
     deriving Show Generic FromJSON ToJSON
 |]
+
+instance IdentPrefix Thread where
+  identPrefix = "T-"

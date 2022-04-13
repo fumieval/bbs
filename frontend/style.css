@@ -23,12 +23,20 @@ article {
   font-weight: bold;
   color: white;
 }
-nav {
+#navigator {
   position: fixed;
   right: 1em;
   top: 1em;
   text-align: center;
 }
+
+#threads {
+  text-align: left;
+  border: 1px solid white;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
 .btn {
   height: 2em;
   width: 2em;
@@ -43,4 +51,7 @@ nav {
 .login input 
 {
   font-size: 1.5em;
+}
+h1 {
+  text-align: center;
 }

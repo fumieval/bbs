@@ -5,6 +5,7 @@ module Lib.DB
     , with
     , declare
     , persistLowerCase
+    , runMigration
     ) where
 
 import Control.Monad.IO.Class
