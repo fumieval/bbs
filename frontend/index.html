@@ -12,14 +12,16 @@
             <nav id="navigator">
                 <a class="btn" href="#container">↑</a>
                 <a class="btn" href="#form">↓</a>
-                <h2>Threads</h2>
-                <ul id="threads">
-                    <li v-for="thread in threads">
-                        <a :href='"/threads/" + thread.ident'>{{ thread.name }}</a>
-                    </li>
-                </ul>
-                <input placeholder="New thread" v-model="newThreadTitle">
-                <input type="submit" id="submit-thread" v-on:click="submitThread" value="Create">
+                <section id="threads">
+                    <h2>Threads</h2>
+                    <ul>
+                        <li v-for="thread in threads">
+                            <a :href='"/threads/" + thread.ident'>{{ thread.name }}</a>
+                        </li>
+                    </ul>
+                    <input placeholder="New thread" v-model="newThreadTitle">
+                    <input type="submit" id="submit-thread" v-on:click="submitThread" value="Create">
+                </section>
             </nav>
             <main id="app">
                 <h1>{{ threadTitle }}</h1>
